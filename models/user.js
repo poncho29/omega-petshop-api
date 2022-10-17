@@ -39,4 +39,11 @@ const UserSchema = Schema({
   }
 });
 
+// Aqui se sobreescribe el metodo toJSON para
+// sacar los valores que quiera de la respuesta
+UserSchema.methods.toJSON = function() {
+  const { __v, password, ...user } = this.toObject();
+  return user;
+}
+
 module.exports = model('User', UserSchema);
