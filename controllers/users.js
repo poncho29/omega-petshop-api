@@ -1,4 +1,5 @@
 const bcryptjs = require('bcryptjs');
+const { findByIdAndUpdate } = require('../models/user');
 const User = require('../models/user');
 
 const usersGet = (req, res) => {
@@ -13,9 +14,9 @@ const usersGet = (req, res) => {
 }
 
 const usersPost = async (req, res) => {
-  // const body = req.body;
   const { password, ...rest } = req.body
-  const user = new User({ password, ...rest });
+  console.log({...rest})
+  const user = new User({ ...rest });
 
   const salt = bcryptjs.genSaltSync();
   user.password = bcryptjs.hashSync(password, salt);
@@ -28,13 +29,22 @@ const usersPost = async (req, res) => {
   })
 }
 
-const usersPut = (req, res) => {
-  const {id} = req.params;
+const usersPut = async(req, res) => {
+  const { id } = req.params;
+  // Se excluyen los campos para que no se actualicen
+  const { password, google, email, ...rest } = req.body;
+
+  if(password) {
+    const salt = bcryptjs.genSaltSync();
+    rest.password = bcryptjs.hashSync(password, salt);
+  }
+
+  const user = await User.findByIdAndUpdate(id, rest);
 
   res.status(201).json({
-    ok: true,
-    id: id,
-    msg: 'put API - controller'
+    msg: 'put API - controller',
+    id,
+    user
   })
 }
 

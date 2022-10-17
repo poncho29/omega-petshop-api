@@ -12,6 +12,7 @@ const { usersGet,
 const router = Router();
 
 router.get('/', usersGet);
+
 router.post('/', [
         body('name', 'El nombre  es requerido').not().isEmpty(),
         body('password', 'La contraseña debe tener minimo 6 caracteres').isLength({ min: 6 }),
@@ -20,7 +21,9 @@ router.post('/', [
         body('role').custom(roleValid),
         validFields
 ],usersPost);
+
 router.put('/:id', usersPut);
+
 router.delete('/:id', usersDelete);
 
 module.exports = router;
