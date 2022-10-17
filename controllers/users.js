@@ -65,7 +65,7 @@ const usersPut = async (req, res) => {
 }
 
 const usersDelete = async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
 
   // Borrarlo de la base de datos (No recomendado)
   // const user = await User.findByIdAndDelete(id);

@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { body, param } = require('express-validator');
 
-const { validFields } = require('../middlewares/validFields');
+const { validJwt, validFields, validRole  } = require('../middlewares');
 const { roleValid, emailValid, existUserById } = require('../helpers/dbValidators');
 
 const { userGet,
@@ -37,6 +37,9 @@ router.put('/:id', [
 ], usersPut);
 
 router.delete('/:id', [
+        validJwt,
+        validRole, // Fuerza a que sea admin
+        // validHasRole('ADMIN_ROLE', 'USER_ROLE'), // Permite más de un role
         param('id', 'No es un ID valido').isMongoId(),
         param('id').custom(existUserById),
         validFields
