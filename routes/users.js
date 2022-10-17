@@ -1,8 +1,8 @@
 const { Router } = require('express');
-const { body } = require('express-validator');
+const { body, param } = require('express-validator');
 
 const { validFields } = require('../middlewares/validFields');
-const { roleValid, emailValid } = require('../helpers/dbValidators');
+const { roleValid, emailValid, existUserById } = require('../helpers/dbValidators');
 
 const { usersGet, 
         usersPost,
@@ -21,8 +21,13 @@ router.post('/', [
         body('role').custom(roleValid),
         validFields
 ],usersPost);
-
-router.put('/:id', usersPut);
+        
+router.put('/:id', [
+        param('id', 'No es un ID valido').isMongoId(),
+        param('id').custom(existUserById),
+        body('role').custom(roleValid),
+        validFields
+], usersPut);
 
 router.delete('/:id', usersDelete);
 
