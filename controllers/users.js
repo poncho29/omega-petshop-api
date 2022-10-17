@@ -1,21 +1,28 @@
 const bcryptjs = require('bcryptjs');
-const { findByIdAndUpdate } = require('../models/user');
 const User = require('../models/user');
 
-const usersGet = (req, res) => {
-  const {q, name = 'No name', apiKey} = req.query;
+const usersGet = async (req, res) => {
+  const { limit = 5, offset = 0 } = req.query;
+  const query = { state: true };
+
+  // Con promise all hacemos las peticiones a la vez lo
+  // hace mas rapida la peticion
+  const [ total, users ] = await Promise.all([
+    User.countDocuments(query),
+    User.find(query)
+      .skip(Number(offset))
+      .limit(Number(limit))
+  ]);
 
   res.json({
-    msg: 'get API  - controller',
-    q,
-    name,
-    apiKey
+    total,
+    users
   })
 }
 
 const usersPost = async (req, res) => {
   const { password, ...rest } = req.body
-  console.log({...rest})
+
   const user = new User({ ...rest });
 
   const salt = bcryptjs.genSaltSync();
@@ -24,12 +31,12 @@ const usersPost = async (req, res) => {
   await user.save();
 
   res.status(201).json({
-    msg: 'post API - controller',
+    msg: 'User created successfully',
     user
   })
 }
 
-const usersPut = async(req, res) => {
+const usersPut = async (req, res) => {
   const { id } = req.params;
   // Se excluyen los campos para que no se actualicen
   const { _id, password, google, ...rest } = req.body;
@@ -42,8 +49,7 @@ const usersPut = async(req, res) => {
   const user = await User.findByIdAndUpdate(id, rest);
 
   res.status(201).json({
-    msg: 'put API - controller',
-    id,
+    msg: 'successful update',
     user
   })
 }
