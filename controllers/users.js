@@ -1,8 +1,18 @@
 const bcryptjs = require('bcryptjs');
 const User = require('../models/user');
 
+const userGet = async (req, res) => {
+  const { id } = req.query;
+
+  const user = await User.findOne(id);
+
+  res.json({
+    user
+  })
+}
+
 const usersGet = async (req, res) => {
-  const { limit = 5, offset = 0 } = req.query;
+  const { limit = 0, offset = 0 } = req.query;
   const query = { state: true };
 
   // Con promise all hacemos las peticiones a la vez lo
@@ -49,21 +59,27 @@ const usersPut = async (req, res) => {
   const user = await User.findByIdAndUpdate(id, rest);
 
   res.status(201).json({
-    msg: 'successful update',
+    msg: 'User update successful',
     user
   })
 }
 
-const usersDelete = (req, res) => {
+const usersDelete = async (req, res) => {
   const {id} = req.params;
 
+  // Borrarlo de la base de datos (No recomendado)
+  // const user = await User.findByIdAndDelete(id);
+
+  const user = await User.findByIdAndUpdate(id, {state: false});
+
   res.status(201).json({
-    ok: true,
-    msg: 'delete API - controller'
+    msg: 'User deleted successfully',
+    user
   })
 }
 
 module.exports = {
+  userGet,
   usersGet,
   usersPost,
   usersPut,
