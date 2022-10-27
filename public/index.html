@@ -34,11 +34,12 @@
 
       const body = { id_token: response.credential }
 
-      const url = (window.location.hostname.includes('localhost'))
-        ? 'https://localhost:8080/api/auth/google'
-        : 'https://omega-petshop-api/api/auth/google'
-
-      console.log(url)
+      const url = '';
+      if (window.location.hostname.includes('localhost')) {
+        url = 'https://localhost:8080/api/auth/google'
+      } else {
+        url = 'https://omega-petshop-api/api/auth/google'
+      }
 
       fetch(url ,{
         method: 'POST',
