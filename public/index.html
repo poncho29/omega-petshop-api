@@ -34,7 +34,13 @@
 
       const body = { id_token: response.credential }
 
-      fetch('http://localhost:8080/api/auth/google',{
+      const url = (window.location.hostname.includes('localhost'))
+        ? 'https://localhost:8080/api/auth/google'
+        : 'https://omega-petshop-api/api/auth/google'
+
+      console.log(url)
+
+      fetch(url ,{
         method: 'POST',
         headers: {
           'Content-Type':'application/json'
