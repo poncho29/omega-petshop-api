@@ -34,7 +34,7 @@
 
       const body = { id_token: response.credential }
 
-      const url = '';
+      let url = '';
       if (window.location.hostname.includes('localhost')) {
         url = 'https://localhost:8080/api/auth/google'
       } else {
