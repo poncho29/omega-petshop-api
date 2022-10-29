@@ -16,7 +16,7 @@ const getCategories = async (req, res = response) => {
       .limit(Number(limit))
   ]);
 
-  res.json({
+  res.status(200).json({
     total,
     categories
   })
@@ -27,7 +27,7 @@ const getCategory = async (req, res) => {
   const { id } = req.params;
   const category = await Category.findById(id).populate('user', 'name');
 
-  res.json(category);
+  res.status(200).json(category);
 }
 
 const createCategory = async (req, res = response) => {
@@ -57,11 +57,30 @@ const createCategory = async (req, res = response) => {
 }
 
 // Actualizar categoria
+const updateCategory = async(req, res = response) => {
+  const { id } = req.params;
+  const { state, user, ...data } = req.body;
+
+  data.name = data.name.toUpperCase(); // para mantener en mayus
+  data.user = req.user._id; // user que modifico
+
+  const category = await Category.findByIdAndUpdate(id, data, {new: true});
+
+  res.status(200).json(category);
+}
 
 // Eliminar categoria - cambiar estado
+const deleteCategory = async(req, res = response) => {
+  const { id } = req.params;
+  const categoryDelete = await Category.findByIdAndUpdate(id, {state: false}, {new: true});
+
+  res.status(200).json(categoryDelete);
+}
 
 module.exports = {
   getCategories,
   getCategory,
-  createCategory
+  createCategory,
+  updateCategory,
+  deleteCategory
 }
