@@ -1,11 +1,13 @@
-const Category = require('./category');
+const User = require('./user');
 const Role = require('./role');
 const Server = require('./server');
-const User = require('./user');
+const Product = require('./product');
+const Category = require('./category');
 
 module.exports = {
-  Category,
+  User,
   Role,
   Server,
-  User
+  Product,
+  Category,
 }
