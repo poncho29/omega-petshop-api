@@ -14,7 +14,7 @@ router.post('/login', [
 ], login);
 
 router.post('/google', [
-  body('id_token', 'El id_token es requerido').not().isEmpty(),
+  body('id_token', 'El id_token es requerido').isEmail(),
   validFields
 ], googleSignIn);
 

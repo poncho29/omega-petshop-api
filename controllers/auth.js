@@ -54,7 +54,6 @@ const googleSignIn = async(req, res = response) => {
   try {
     const { name, email, img } = await googleVerify(id_token);
     let user = await User.findOne({ email });
-    console.log(user)
 
     // Si no existe se crea el usuarioß
     if(!user) {
